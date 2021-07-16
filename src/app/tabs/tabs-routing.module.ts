@@ -8,6 +8,11 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: 'music',
+        loadChildren: () => import('./music/music.module')
+          .then(m => m.MusicPageModule)
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./settings/settings.module').then(m => m.SettingsPageModule)
       },

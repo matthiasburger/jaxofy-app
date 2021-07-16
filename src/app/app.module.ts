@@ -8,16 +8,33 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 
+import {StoreModule} from '@ngrx/store';
+import {MediaState} from './services/store/store';
+
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ErrorHandler} from '@angular/core';
+import {AudioService} from './services/audio.service';
+import {CloudService} from './services/cloud.service';
+import {AuthenticationService} from './services/authentication.service';
+import {ReactiveFormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({
+      appState: MediaState.mediaStateReducer
+    }),
+    IonicModule.forRoot(),
+    ReactiveFormsModule
   ],
-  providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [{
+    provide: RouteReuseStrategy,
+    useClass: IonicRouteStrategy
+  }, AudioService, CloudService, AuthenticationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {
