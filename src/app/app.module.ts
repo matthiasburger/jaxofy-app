@@ -9,7 +9,7 @@ import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 
 import {StoreModule} from '@ngrx/store';
-import {MediaState} from './services/store/store';
+import {mediaStateReducer} from './services/store/store';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ErrorHandler} from '@angular/core';
@@ -26,7 +26,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot({
-      appState: MediaState.mediaStateReducer
+      appState: mediaStateReducer
     }),
     IonicModule.forRoot(),
     ReactiveFormsModule

@@ -6,6 +6,7 @@ import {CloudService} from '../../services/cloud.service';
 import {AudioService} from '../../services/audio.service';
 import {distinctUntilChanged, filter, map, pluck} from 'rxjs/operators';
 import {CANPLAY, LOADEDMETADATA, LOADSTART, PLAYING, RESET, TIMEUPDATE} from '../../services/store/store';
+import {StreamState} from '../../interfaces/stream-state';
 
 @Component({
   selector: 'app-player',
@@ -15,12 +16,14 @@ import {CANPLAY, LOADEDMETADATA, LOADSTART, PLAYING, RESET, TIMEUPDATE} from '..
 export class PlayerComponent implements OnInit {
   files: any = [];
   seekbar: FormControl = new FormControl('seekbar');
-  state: any = {};
+  state: StreamState | null = null;
   onSeekState: boolean;
   currentFile: any = {};
   displayFooter = 'inactive';
   loggedIn: boolean;
-  
+
+  seekStart = false;
+
   constructor(
     public audioProvider: AudioService,
     public cloudProvider: CloudService,
@@ -33,6 +36,10 @@ export class PlayerComponent implements OnInit {
         this.getDocuments();
 
       }
+    });
+
+    this.audioProvider.getState().subscribe(s => {
+      this.state = s;
     });
   }
 
@@ -164,7 +171,8 @@ export class PlayerComponent implements OnInit {
     return this.currentFile.index === this.files.length - 1;
   }
 
-  onSeekStart() {
+
+  onSeekStart(event) {
     this.onSeekState = this.state.playing;
     if (this.onSeekState) {
       this.pause();
@@ -172,11 +180,13 @@ export class PlayerComponent implements OnInit {
   }
 
   onSeekEnd(event) {
+    this.seekStart = false;
+
     if (this.onSeekState) {
-      this.audioProvider.seekTo(event.value);
+      this.audioProvider.seekTo(event.detail.value);
       this.play();
     } else {
-      this.audioProvider.seekTo(event.value);
+      this.audioProvider.seekTo(event.detail.value);
     }
   }
 

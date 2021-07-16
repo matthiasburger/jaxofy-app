@@ -1,14 +1,16 @@
 <ion-toolbar color="primary">
-  <ion-range min="0" color="light" [max]="state.duration" [formControl]="seekbar" (ionFocus)="onSeekStart()"
+  <ion-range min="0" color="light" [max]="state.duration" [formControl]="seekbar" (input)="onSeekEnd($event)"
+             [value]="state?.currentTime" (ionFocus)="onSeekStart($event)"
              (ionBlur)="onSeekEnd($event)"
              name="seekbar">
-    <ion-label color="light" range-right>{{ state.time }}</ion-label>
-    <ion-label color="light" range-right>{{ state.duration }}</ion-label>
-
-    <div padding id="app-section" text-center>
-    </div>
 
   </ion-range>
+
+  <ion-label color="light" range-right>{{ state.readableCurrentTime }}</ion-label>
+  <ion-label color="light" range-right>{{ state.readableDuration }}</ion-label>
+
+  <div padding id="app-section" text-center>
+  </div>
 
   <ion-grid>
     <ion-row align-items-center id="media-controls">
