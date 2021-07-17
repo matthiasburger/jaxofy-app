@@ -4,6 +4,7 @@ import {Observable, BehaviorSubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {StreamState} from '../interfaces/stream-state';
+import {PlaylistService} from './playlist.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,18 @@ export class AudioService {
     this.state
   );
 
-  public playStream(url: string): Observable<any> {
-    return this.streamObservable(url).pipe(takeUntil(this.stop$));
+  constructor(public playlistService: PlaylistService) {
+
+  }
+
+  startCurrentPlaylist() {
+    this.playPlaylist().subscribe(x => {
+    });
+  }
+
+  public playPlaylist(): Observable<any> {
+    const currentAudio = this.playlistService.current;
+    return this.streamObservable(currentAudio.url).pipe(takeUntil(this.stop$));
   }
 
   play(): Promise<void> {
@@ -69,13 +80,21 @@ export class AudioService {
     return this.stateChange.asObservable();
   }
 
-  public onEnd(fn: any): void {
-    this.onEndFunction = fn;
+  public next() {
+    this.resetState();
+    this.playlistService.next();
+    this.playPlaylist().subscribe();
   }
 
-  private onEndFunction = () => {
-  };
+  public previous() {
+    this.resetState();
+    this.playlistService.previous();
+    this.playPlaylist().subscribe();
+  }
 
+  private onEndFunction() {
+    this.next();
+  }
 
   private addEvents(obj: any, events: any[], handler: any): void {
     events.forEach(event => {
@@ -92,17 +111,23 @@ export class AudioService {
   private updateStateEvents(event: Event): void {
     switch (event.type) {
       case 'canplay':
+        console.log('canplay');
         this.state.duration = this.audioObj.duration;
         this.state.readableDuration = this.formatTime(this.state.duration);
         this.state.canplay = true;
         break;
       case 'playing':
+        console.log('playing');
+
         this.state.playing = true;
         break;
       case 'pause':
+        console.log('pause');
         this.state.playing = false;
         break;
       case 'timeupdate':
+        console.log('timeupdate');
+
         this.state.currentTime = this.audioObj.currentTime;
         this.state.readableCurrentTime = this.formatTime(
           this.state.currentTime
@@ -113,6 +138,9 @@ export class AudioService {
         this.state.error = true;
         break;
       case 'ended':
+        this.stop();
+        this.resetState();
+
         console.log('end');
         this.onEndFunction();
         break;
