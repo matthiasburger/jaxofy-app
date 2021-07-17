@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Storage} from '@capacitor/storage';
 import {HttpOptions, WebRequest} from '../core/api-client';
 import {environment} from '../../environments/environment';
-import {Path} from "../core/path";
+import {Path} from '../core/path';
 
 const TOKEN_KEY = 'my-token';
 

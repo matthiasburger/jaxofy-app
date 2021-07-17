@@ -1,20 +1,18 @@
 <ion-toolbar color="primary">
-  <ion-range min="0" color="light" [max]="state.duration" [formControl]="seekbar" (input)="onSeekEnd($event)"
-             [value]="state?.currentTime" (ionFocus)="onSeekStart($event)"
-             (ionBlur)="onSeekEnd($event)"
-             name="seekbar">
-
+  <ion-range min="0" color="light" [max]="state?.duration" [formControl]="seekbar" [value]="state?.currentTime"
+             (ionFocus)="onSeekStart()" (ionBlur)="onSeekEnd($event)" name="seekbar" >
   </ion-range>
 
   <ion-label color="light" range-right>{{ state.readableCurrentTime }}</ion-label>
   <ion-label color="light" range-right>{{ state.readableDuration }}</ion-label>
+  <ion-label color="light" range-right>{{ playlist.current?.title }}</ion-label>
 
   <div padding id="app-section" text-center>
   </div>
 
   <ion-grid>
     <ion-row align-items-center id="media-controls">
-      <button clear ion-col ion-button [disabled]="isFirstPlaying()" (click)="previous()">
+      <button clear ion-col ion-button (click)="previous()">
         <ion-icon color="light" name="skip-backward"></ion-icon>
       </button>
       <button clear ion-col ion-button *ngIf="!state.playing" (click)="play()">
@@ -23,7 +21,7 @@
       <button clear ion-col ion-button *ngIf="!!state.playing" (click)="pause()">
         <ion-icon color="light" name="pause"></ion-icon>
       </button>
-      <button clear ion-col ion-button [disabled]="isLastPlaying()" (click)="next()">
+      <button clear ion-col ion-button (click)="next()">
         <ion-icon color="light" name="skip-forward"></ion-icon>
       </button>
     </ion-row>
