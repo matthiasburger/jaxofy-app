@@ -5,6 +5,8 @@ import {takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {StreamState} from '../interfaces/stream-state';
 import {PlaylistService} from './playlist.service';
+import {environment} from '../../environments/environment';
+import {Path} from '../core/path';
 
 @Injectable({
   providedIn: 'root'
@@ -163,7 +165,7 @@ export class AudioService {
   private streamObservable(url: string): Observable<any> {
     return new Observable(observer => {
       // Play audio
-      this.audioObj.src = url;
+      this.audioObj.src = Path.join(environment.apiUrl, url);
       this.audioObj.load();
       this.audioObj.play();
 
